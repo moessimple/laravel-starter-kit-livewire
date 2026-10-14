@@ -1,0 +1,42 @@
+name: security
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  schedule:
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dependencies:
+    # composer test:vet: fails if any dependency in composer.lock isn't recorded as
+    # trusted in vet.json (laravel/vet supply-chain audit). composer test:audit: fails
+    # on known CVEs in composer.lock (checked explicitly, not relying on Composer's
+    # implicit post-install audit) and in package-lock.json via npm audit.
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup app
+        uses: ./.github/actions/setup-app
+        with:
+          build: 'false'
+
+      - name: Vet dependencies
+        run: composer test:vet
+
+      - name: Audit dependencies
+        run: composer test:audit

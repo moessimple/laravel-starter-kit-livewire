@@ -1,0 +1,146 @@
+{
+    "$schema": "https://getcomposer.org/schema.json",
+    "name": "moessimple/laravel-starter-kit-livewire",
+    "type": "project",
+    "description": "A blank Laravel and Livewire starter kit with a strict quality gate wired in from the first commit.",
+    "keywords": [
+        "laravel",
+        "livewire",
+        "starter-kit",
+        "skeleton"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^8.5",
+        "laravel/framework": "^13.35",
+        "laravel/tinker": "^3.0",
+        "livewire/blaze": "^1.0.19",
+        "livewire/livewire": "^4.4.7",
+        "nunomaduro/essentials": "^1.2"
+    },
+    "require-dev": {
+        "driftingly/rector-laravel": "^2.6",
+        "fakerphp/faker": "^1.24",
+        "larastan/larastan": "^3.12.3",
+        "laravel/boost": "^2.10.2",
+        "laravel/pail": "^1.2.5",
+        "laravel/pao": "^1.0.6",
+        "laravel/pint": "^1.32.1",
+        "laravel/sail": "^1.68",
+        "laravel/vet": "^0.2.1",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.9.3",
+        "pestphp/pest": "^5.3",
+        "pestphp/pest-plugin-browser": "^5.1.2",
+        "pestphp/pest-plugin-laravel": "^5.0",
+        "pestphp/pest-plugin-phpstan": "^5.2.2",
+        "pestphp/pest-plugin-type-coverage": "^5.0",
+        "phpstan/phpstan-mockery": "^2.0",
+        "rector/rector": "^2.7.0",
+        "roave/security-advisories": "dev-latest"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "setup": [
+            "composer install",
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "@php artisan key:generate",
+            "@php artisan migrate --force",
+            "npm install",
+            "npx playwright install chromium",
+            "npm run build"
+        ],
+        "dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php artisan dev"
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+            "@php artisan boost:update --ansi"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi",
+            "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
+            "@php artisan migrate --graceful --ansi"
+        ],
+        "pre-package-uninstall": [
+            "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
+        ],
+        "update:dependencies": [
+            "@composer update --bump-after-update",
+            "npm update --save"
+        ],
+        "lint": [
+            "rector",
+            "pint --parallel",
+            "npm run lint"
+        ],
+        "test:lint": [
+            "rector --dry-run",
+            "pint --parallel --test",
+            "npm run test:lint"
+        ],
+        "test:type-coverage": "pest --type-coverage --min=100",
+        "test:vet": "vet -n",
+        "test:audit": [
+            "@composer audit --locked",
+            "npm audit"
+        ],
+        "test:types": "phpstan",
+        "test:unit": "XDEBUG_MODE=coverage pest --parallel --coverage --exactly=100.0",
+        "test:browser": [
+            "npx playwright install chromium",
+            "pest --testsuite=Browser --group=browser"
+        ],
+        "test": [
+            "@php artisan config:clear --ansi",
+            "@test:vet",
+            "@test:audit",
+            "@test:lint",
+            "@test:type-coverage",
+            "@test:types",
+            "@test:unit",
+            "@test:browser"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true,
+            "laravel/vet": true
+        },
+        "audit": {
+            "ignore-abandoned": [
+                "symplify/rule-doc-generator-contracts"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
