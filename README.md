@@ -23,8 +23,9 @@ code grows.
 - **100% coverage, enforced**: the build fails below 100% line coverage (Pest), plus a 100%
   type-coverage gate.
 - **Class-based Livewire components**: `make:livewire` creates a class in `app/Livewire`
-  instead of a Livewire 4 single-file component, so component logic sits where PHPStan,
-  Rector and the coverage gate look ([`config/livewire.php`](config/livewire.php)).
+  instead of a Livewire 4 single-file component. Livewire runs single- and multi-file
+  components from a compiled copy, so line coverage never reaches their source and the
+  100% gate could not cover them ([`config/livewire.php`](config/livewire.php)).
 - **Real-browser tests**: the app runs for real in headless Chromium as part of the normal
   test run.
 - **Deterministic test baseline**: every test starts from the same fixed state, so a result

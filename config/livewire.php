@@ -11,8 +11,9 @@ declare(strict_types=1);
 | config (vendor/livewire/livewire/config/livewire.php).
 |
 | make:livewire creates class-based components (app/Livewire plus a view in
-| resources/views/livewire) instead of single-file components, so component
-| logic stays under app/ where PHPStan, Rector and the coverage gate run.
+| resources/views/livewire) instead of single- or multi-file components.
+| Livewire runs those from a compiled copy in storage/framework/views, so
+| line coverage never reaches their source and the 100% gate cannot cover them.
 |
 */
 
