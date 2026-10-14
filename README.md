@@ -10,7 +10,7 @@ quality and development workflow decided and enforced in CI from the first commi
 Livewire 4 and Tailwind CSS 4 on the frontend. No auth, no UI kit, no example code.
 
 The Inertia and Vue twin of this kit is
-[moessimple/laravel-starter-kit](https://github.com/moessimple/laravel-starter-kit).
+[moessimple/laravel-starter-kit-inertia-vue](https://github.com/moessimple/laravel-starter-kit-inertia-vue).
 
 ## Why This Starter Kit?
 
