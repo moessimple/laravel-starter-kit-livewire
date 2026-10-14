@@ -57,9 +57,25 @@ Nothing above is documentation-only: it all runs on every push.
 > **Requires PHP 8.5+, Node 24+, and a code coverage driver like
 > [Xdebug](https://xdebug.org/docs/install).**
 
-Use the **Use this template** button on GitHub, or clone this repository, then:
+Use the **Use this template** button on GitHub and clone your new repository, or create
+a local project with Composer:
 
 ```bash
+composer create-project \
+  --repository='{"type":"vcs","url":"https://github.com/moessimple/laravel-starter-kit-livewire"}' \
+  --remove-vcs \
+  moessimple/laravel-starter-kit-livewire example-app dev-main
+```
+
+Replace `example-app` with your project directory. `dev-main` uses the latest code on
+`main`.
+
+### Initial Setup
+
+Navigate to your project directory and run the setup:
+
+```bash
+cd example-app
 composer setup
 ```
 
