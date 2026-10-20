@@ -37,7 +37,7 @@ runs:
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
-        key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('composer.json', 'composer.lock') }}
         restore-keys: ${{ runner.os }}-composer-
 
     - name: Install Composer dependencies
@@ -51,15 +51,24 @@ runs:
         php artisan key:generate
 
     - name: Cache npm dependencies
+      # Caches npm's download cache, not node_modules/: npm keeps installed packages that still
+      # satisfy package.json, so a restored node_modules/ would hold back newer releases.
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
-        path: node_modules
-        key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+        path: ~/.npm
+        key: ${{ runner.os }}-npm-${{ hashFiles('package.json', 'package-lock.json') }}
         restore-keys: ${{ runner.os }}-npm-
 
     - name: Install npm dependencies
+      # npm ci installs exactly what package-lock.json records and fails if it is out of sync with
+      # package.json. Without a committed package-lock.json, npm install resolves the dependencies.
       shell: bash
-      run: npm ci
+      run: |
+        if [ -f package-lock.json ]; then
+          npm ci
+        else
+          npm install
+        fi
 
     - name: Build assets
       if: inputs.build == 'true'

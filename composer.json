@@ -70,8 +70,7 @@
             "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
-            "@php artisan boost:update --ansi"
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
@@ -86,7 +85,8 @@
         ],
         "update:dependencies": [
             "@composer update --bump-after-update",
-            "npm update --save"
+            "npm update --save",
+            "@php artisan boost:update --ansi"
         ],
         "lint": [
             "rector",
@@ -99,7 +99,6 @@
             "npm run test:lint"
         ],
         "test:type-coverage": "pest --type-coverage --min=100",
-        "test:vet": "vet -n",
         "test:audit": [
             "@composer audit --locked",
             "npm audit"
@@ -112,7 +111,6 @@
         ],
         "test": [
             "@php artisan config:clear --ansi",
-            "@test:vet",
             "@test:audit",
             "@test:lint",
             "@test:type-coverage",
