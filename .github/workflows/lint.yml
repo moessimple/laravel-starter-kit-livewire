@@ -32,15 +32,25 @@ jobs:
         with:
           build: 'false'
 
-      - name: Cache Rector
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      # As in https://getrector.com/documentation/cache-in-ci: cache entries cannot be updated, so
+      # each run saves under its own key, also after a failing lint, and restore-keys loads the
+      # most recent one.
+      - name: Restore Rector cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: /tmp/rector
-          key: ${{ runner.os }}-rector-${{ hashFiles('composer.lock') }}
+          key: ${{ runner.os }}-rector-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-rector-
 
       - name: Lint
         run: composer test:lint
+
+      - name: Save Rector cache
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        if: ${{ !cancelled() }}
+        with:
+          path: /tmp/rector
+          key: ${{ runner.os }}-rector-${{ github.run_id }}
 
       - name: Type coverage
         run: composer test:type-coverage

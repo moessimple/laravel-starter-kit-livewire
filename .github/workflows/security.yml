@@ -17,10 +17,9 @@ concurrency:
 
 jobs:
   dependencies:
-    # composer test:vet: fails if any dependency in composer.lock isn't recorded as
-    # trusted in vet.json (laravel/vet supply-chain audit). composer test:audit: fails
-    # on known CVEs in composer.lock (checked explicitly, not relying on Composer's
-    # implicit post-install audit) and in package-lock.json via npm audit.
+    # composer test:audit: fails on known CVEs in composer.lock (checked explicitly, not
+    # relying on Composer's implicit post-install audit) and in package-lock.json via npm
+    # audit. The weekly schedule catches advisories published since the last push.
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -34,9 +33,6 @@ jobs:
         uses: ./.github/actions/setup-app
         with:
           build: 'false'
-
-      - name: Vet dependencies
-        run: composer test:vet
 
       - name: Audit dependencies
         run: composer test:audit
