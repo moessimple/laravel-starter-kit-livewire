@@ -84,7 +84,8 @@
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
         ],
         "update:dependencies": [
-            "@composer update --bump-after-update",
+            "@composer update",
+            "@composer bump",
             "npm update --save",
             "@php artisan boost:update --ansi"
         ],
