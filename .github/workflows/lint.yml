@@ -15,7 +15,8 @@ concurrency:
 
 jobs:
   lint:
-    # composer test:lint: Pint + Rector (dry run) over the PHP paths, then the vite-plus
+    # composer test:composer: composer validate --strict, including that composer.lock matches
+    # composer.json. composer test:lint: Pint + Rector (dry run) over the PHP paths, then the vite-plus
     # formatter and linter over the frontend. composer test:type-coverage: Pest's 100%
     # type-coverage gate over app/.
     runs-on: ubuntu-latest
@@ -31,6 +32,9 @@ jobs:
         uses: ./.github/actions/setup-app
         with:
           build: 'false'
+
+      - name: Validate composer.json
+        run: composer test:composer
 
       # As in https://getrector.com/documentation/cache-in-ci: cache entries cannot be updated, so
       # each run saves under its own key, also after a failing lint, and restore-keys loads the

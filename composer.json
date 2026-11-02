@@ -100,6 +100,7 @@
             "npm run test:lint"
         ],
         "test:type-coverage": "pest --type-coverage --min=100",
+        "test:composer": "@composer validate --strict",
         "test:audit": [
             "@composer audit --locked",
             "npm audit"
@@ -112,6 +113,7 @@
         ],
         "test": [
             "@php artisan config:clear --ansi",
+            "@test:composer",
             "@test:audit",
             "@test:lint",
             "@test:type-coverage",
