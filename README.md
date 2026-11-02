@@ -120,11 +120,11 @@ frontend fixers in place.
 
 ### Code Quality
 
-- `composer test:composer`: validates `composer.json` strictly and checks that `composer.lock`
-  is up to date with it.
 - `composer lint`: Rector, Pint and `vp fmt` / `vp lint`, fixing in place.
 - `composer test:lint`: the same checks read-only (Rector `--dry-run`, Pint `--test`,
   frontend in check mode).
+- `composer test:composer`: validates `composer.json` strictly and checks that `composer.lock`
+  is up to date with it.
 
 ### Testing
 
