@@ -100,6 +100,13 @@ Runs the full gate in order: security audit, lint, type coverage, static analysi
 tests, browser tests. The kit ships at 100% line and type coverage. A fresh install resolves
 the latest dependency releases, so a new release can occasionally fail a check.
 
+### Repository Settings
+
+GitHub does not copy repository settings from a template. Add a ruleset for `main` that
+requires a pull request before merging and the status checks `lint`, `static`, `app`,
+`browser` and `security`, so a failing check blocks the merge. Set the number of required
+approvals to fit your team.
+
 ### Daily Workflow
 
 Add components with `php artisan make:livewire Name` (or `Pages/Name` for a full-page
