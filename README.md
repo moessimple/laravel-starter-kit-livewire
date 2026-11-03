@@ -35,9 +35,9 @@ code grows.
   a consistent style; `vp fmt` / `vp lint` ([vite-plus](https://viteplus.dev)) do the same
   for the frontend. One deliberate boundary: it never makes classes
   `final`, so they stay open to extension.
-- **Vulnerable dependencies never install**:
-  [`roave/security-advisories`](https://github.com/Roave/SecurityAdvisories) blocks any
-  package with a known CVE, and npm install scripts are turned off.
+- **Known vulnerable dependency updates blocked**: Composer 2.9+ blocks affected package
+  versions during `require` and `update`, CI runs dependency audits, and npm install
+  scripts are turned off.
 - **Better Laravel defaults** via
   [Essentials](https://github.com/nunomaduro/essentials): strict models, automatic eager
   loading, immutable dates, prohibited destructive commands, forced HTTPS in production.
@@ -54,7 +54,7 @@ Nothing above is documentation-only: it all runs on every push.
 
 ## Getting Started
 
-> **Requires PHP 8.5+, Node 24+, and a code coverage driver like
+> **Requires PHP 8.5+, Composer 2.9+, Node 24+, and a code coverage driver like
 > [Xdebug](https://xdebug.org/docs/install).**
 
 Use the **Use this template** button on GitHub and clone your new repository, or create
