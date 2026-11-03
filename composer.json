@@ -12,7 +12,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.5",
-        "composer-plugin-api": ">=2.9.0",
+        "composer-plugin-api": ">=2.11.0",
         "laravel/framework": "^13.35",
         "laravel/tinker": "^3.0",
         "livewire/blaze": "^1.0.19",
@@ -140,6 +140,11 @@
             "ignore-abandoned": [
                 "symplify/rule-doc-generator-contracts"
             ]
+        },
+        "policy": {
+            "cooldown": {
+                "period": "3 days"
+            }
         }
     },
     "minimum-stability": "stable",

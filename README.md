@@ -35,7 +35,7 @@ code grows.
   a consistent style; `vp fmt` / `vp lint` ([vite-plus](https://viteplus.dev)) do the same
   for the frontend. One deliberate boundary: it never makes classes
   `final`, so they stay open to extension.
-- **Known vulnerable dependency updates blocked**: Composer 2.9+ blocks affected package
+- **Known vulnerable dependency updates blocked**: Composer 2.11+ blocks affected package
   versions during `require` and `update`, CI runs dependency audits, and npm install
   scripts are turned off.
 - **Better Laravel defaults** via
@@ -44,7 +44,7 @@ code grows.
   Under these, a missing eager load or a mutated date fails a test instead of reaching
   production.
 - **Split CI**: `lint`, `static analysis`, `tests` and `security` are four separate
-  checks, alongside weekly Dependabot for GitHub Actions with a 5-day cooldown on new
+  checks, alongside weekly Dependabot for GitHub Actions with a 3-day cooldown on new
   releases.
 - **AI-agent environment, wired in**: Laravel Boost's MCP server, a curated set of skills
   under [`.claude/skills/`](.claude/skills/), and project conventions in
@@ -54,7 +54,7 @@ Nothing above is documentation-only: it all runs on every push.
 
 ## Getting Started
 
-> **Requires PHP 8.5+, Composer 2.9+, Node 24+, and a code coverage driver like
+> **Requires PHP 8.5+, Composer 2.11+, Node 24+, npm 11.17+, and a code coverage driver like
 > [Xdebug](https://xdebug.org/docs/install).**
 
 Use the **Use this template** button on GitHub and clone your new repository, or create
@@ -124,6 +124,21 @@ frontend fixers in place.
 ### Security
 
 - `composer test:audit`: checks `composer.lock` and `package-lock.json` for known CVEs.
+
+Composer and npm wait three days before accepting new releases. Dependabot applies
+the same cooldown to regular version updates. Its security updates bypass that
+wait, but Composer and npm still enforce their own cooldowns.
+Existing lockfiles remain installable. For a critical security fix, review the
+maintainer advisory and bypass the cooldown only for that update:
+
+```bash
+composer update --no-cooldown vendor/package
+npm update package-name --min-release-age-exclude=package-name
+```
+
+Review the complete dependency diff: Composer bypasses the cooldown for the whole
+command, including newly resolved dependencies. Advisory and malware blocking and
+Vet trust checks remain active.
 
 ### Code Quality
 
