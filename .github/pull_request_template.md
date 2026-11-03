@@ -12,7 +12,13 @@ Link the issue when applicable. -->
 ## Validation
 
 <!-- List exact commands or scenarios and their results. Distinguish local checks from hosted CI.
-Report failed or unavailable checks explicitly. For UI changes, name the browsers and devices you checked. -->
+For changed mobile interactions, name the device, operating system, browser, states exercised,
+and observed results. Distinguish hardware, simulator, and emulation coverage.
+Report failed or unavailable checks explicitly. -->
+
+## Independent review
+
+<!-- Record the reviewer, the reviewed base and head SHAs, the verdict, and verification limits. -->
 
 ## Limitations
 
