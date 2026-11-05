@@ -3,7 +3,6 @@
 [![tests](https://github.com/moessimple/laravel-starter-kit-livewire/actions/workflows/tests.yml/badge.svg)](https://github.com/moessimple/laravel-starter-kit-livewire/actions/workflows/tests.yml)
 [![lint](https://github.com/moessimple/laravel-starter-kit-livewire/actions/workflows/lint.yml/badge.svg)](https://github.com/moessimple/laravel-starter-kit-livewire/actions/workflows/lint.yml)
 [![static analysis](https://github.com/moessimple/laravel-starter-kit-livewire/actions/workflows/static.yml/badge.svg)](https://github.com/moessimple/laravel-starter-kit-livewire/actions/workflows/static.yml)
-[![security](https://github.com/moessimple/laravel-starter-kit-livewire/actions/workflows/security.yml/badge.svg)](https://github.com/moessimple/laravel-starter-kit-livewire/actions/workflows/security.yml)
 
 A blank [Laravel](https://laravel.com) skeleton for PHP 8.5 and Laravel 13, with the
 quality and development workflow decided and enforced in CI from the first commit.
@@ -36,16 +35,14 @@ code grows.
   for the frontend. One deliberate boundary: it never makes classes
   `final`, so they stay open to extension.
 - **Known vulnerable dependency updates blocked**: Composer 2.11+ blocks affected package
-  versions during `require` and `update`, CI runs dependency audits, and npm install
-  scripts are turned off.
+  versions during `require` and `update`, and npm install scripts are turned off.
 - **Better Laravel defaults** via
   [Essentials](https://github.com/nunomaduro/essentials): strict models, automatic eager
   loading, immutable dates, prohibited destructive commands, forced HTTPS in production.
   Under these, a missing eager load or a mutated date fails a test instead of reaching
   production.
-- **Split CI**: `lint`, `static analysis`, `tests` and `security` are four separate
-  checks, alongside weekly Dependabot for GitHub Actions with a 3-day cooldown on new
-  releases.
+- **Split CI**: `lint`, `static analysis` and `tests` are separate checks, alongside
+  weekly Dependabot for GitHub Actions with a 3-day cooldown on new releases.
 - **AI-agent environment, wired in**: Laravel Boost's MCP server, a curated set of skills
   under [`.claude/skills/`](.claude/skills/), and project conventions in
   [`.ai/rules/`](.ai/rules/), so an agent picks up the house style on the first prompt.
@@ -96,16 +93,16 @@ Starts the Laravel server, queue worker, log viewer and Vite dev server together
 composer test
 ```
 
-Runs the full gate in order: security audit, lint, type coverage, static analysis, unit
-tests, browser tests. The kit ships at 100% line and type coverage. A fresh install resolves
-the latest dependency releases, so a new release can occasionally fail a check.
+Runs the full gate in order: lint, type coverage, static analysis, unit tests, browser
+tests. The kit ships at 100% line and type coverage. A fresh install resolves the latest
+dependency releases, so a new release can occasionally fail a check.
 
 ### Repository Settings
 
 GitHub does not copy repository settings from a template. Add a ruleset for `main` that
-requires a pull request before merging and the status checks `lint`, `static`, `app`,
-`browser` and `security`, so a failing check blocks the merge. Set the number of required
-approvals to fit your team.
+requires a pull request before merging and the status checks `lint`, `static`, `app` and
+`browser`, so a failing check blocks the merge. Set the number of required approvals to fit
+your team. Then take the steps under [Security](#security).
 
 ### Daily Workflow
 
@@ -120,25 +117,6 @@ frontend fixers in place.
 ### Development
 
 - `composer dev`: Laravel server, queue worker, log viewer and Vite, together.
-
-### Security
-
-- `composer test:audit`: checks `composer.lock` and `package-lock.json` for known CVEs.
-
-Composer and npm wait three days before accepting new releases. Dependabot applies
-the same cooldown to regular version updates. Its security updates bypass that
-wait, but Composer and npm still enforce their own cooldowns.
-Existing lockfiles remain installable. For a critical security fix, review the
-maintainer advisory and bypass the cooldown only for that update:
-
-```bash
-composer update --no-cooldown vendor/package
-npm update package-name --min-release-age-exclude=package-name
-```
-
-Review the complete dependency diff: Composer bypasses the cooldown for the whole
-command, including newly resolved dependencies. Advisory and malware blocking and
-Vet trust checks remain active.
 
 ### Code Quality
 
@@ -160,6 +138,54 @@ Vet trust checks remain active.
 
 - `composer update:dependencies`: bumps Composer and npm packages within their version
   constraints, then refreshes the Boost guidelines and skills.
+
+## Security
+
+Built in:
+
+- When Composer resolves dependencies, it skips versions with a known vulnerability and
+  versions flagged as malware. After `composer update` and `composer require` it lists
+  advisories that affect the installed packages.
+- npm runs no install scripts ([`.npmrc`](.npmrc)).
+- `composer test:audit` checks `composer.lock` and `package-lock.json` on demand.
+
+For your project:
+
+1. **Record the packages you trust.** The kit ships [Vet](https://github.com/laravel/vet),
+   which shows the code an update is about to write into `vendor/`. A new project starts
+   without trust entries, so Composer reports `Vet has no trust entry`. Record what
+   `composer setup` installed and commit `vet.json`:
+
+   ```bash
+   ./vendor/bin/vet --init
+   ```
+
+2. **Turn on Dependabot alerts and security updates** in the repository settings. GitHub
+   then checks your lockfiles against new advisories and opens a fix pull request.
+3. **Optional: wait before taking new releases.** With a cooldown, Composer and npm skip
+   releases younger than three days when they resolve dependencies. Add it to `config` in
+   `composer.json`:
+
+   ```json
+   "policy": {
+       "cooldown": {
+           "period": "3 days"
+       }
+   }
+   ```
+
+   And add a line to `.npmrc`:
+
+   ```ini
+   min-release-age=3
+   ```
+
+   To take a security fix inside that wait, update only that package:
+
+   ```bash
+   composer update vendor/package --no-cooldown
+   npm update package-name --min-release-age-exclude=package-name
+   ```
 
 ## Credits
 

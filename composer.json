@@ -114,7 +114,6 @@
         "test": [
             "@php artisan config:clear --ansi",
             "@test:composer",
-            "@test:audit",
             "@test:lint",
             "@test:type-coverage",
             "@test:types",
@@ -136,14 +135,14 @@
             "php-http/discovery": true,
             "laravel/vet": true
         },
-        "audit": {
-            "ignore-abandoned": [
-                "symplify/rule-doc-generator-contracts"
-            ]
-        },
         "policy": {
-            "cooldown": {
-                "period": "3 days"
+            "abandoned": {
+                "ignore": {
+                    "symplify/rule-doc-generator-contracts": {
+                        "constraint": "^11.2",
+                        "reason": "Dev only: driftingly/rector-laravel requires it and has no replacement yet."
+                    }
+                }
             }
         }
     },
